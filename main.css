@@ -1,0 +1,164 @@
+/*CSS RESETS*/
+*,
+*::before,
+*::after {
+  /*Reset box-sizing model*/
+  box-sizing: border-box;
+}
+
+* {
+  /*Remove default margin*/
+  margin: 0;
+}
+
+body {
+  /*Assessible line-height*/
+  line-height: 1.5;
+
+
+  /*Improve text rendering*/
+  -webkit-font-smoothing: antialiased;
+}
+
+input,
+button,
+textarea,
+select {
+  /*Remove built-in typography styles*/
+  font: inherit;
+}
+
+
+
+
+:root {
+  --debug-color: #f000;
+  --bg-color: #fafafaff;
+}
+
+
+body {
+  background-color: var(--bg-color);
+  columns: 72px 12;
+  column-gap: 24;
+  max-width: calc(((72 * 12) + (24 * 11)) * 1px);
+  margin: 0 auto;
+  font-size: 18px;
+}
+
+
+
+h1 {
+  border: 1px solid var(--debug-color);
+  text-align: center;
+  font-size: 3em;
+  column-span: all;
+  margin-bottom: 36px;
+}
+
+
+#project-container {
+  border: 3px solid black;
+  column-span: all;
+  padding: 18px;
+}
+
+
+.clickable {
+  background-color: var(--bg-color);
+  outline: 1px solid var(--debug-color);
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 8px 16px;
+}
+
+
+.clickable:hover {
+  background-color: #efefef;
+}
+
+
+.project-title {
+  font-size: 36px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.project {
+  margin-bottom: 144px;
+}
+
+
+.task-group-title {
+  display: block;
+  text-align: start;
+  font-family: 'Courier New', Courier, monospace;
+  text-transform: initial;
+}
+
+.task-group {
+  display: flex;
+}
+
+
+.task {
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.task-title {
+  font-family: 'Courier New', Courier, monospace;
+  text-transform: initial;
+}
+
+
+.task-group-title-container,
+.task-group-task-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-group-title-container {
+  flex: 4;
+  padding-right: 15px;
+}
+
+.task-group-task-container {
+  flex: 8;
+  border-left: 1px solid black;
+  padding-left: 16px;
+}
+
+.divider {
+  font-size: 0.5px;
+  background-color: black;
+  margin-top: 15.25px;
+  margin-bottom: 15.25px;
+}
+
+
+.rename-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+
+.new-buttons-container {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
+
+.task-controls-container {
+  min-width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
