@@ -33,7 +33,9 @@ select {
 
 :root {
   --debug-color: #f000;
-  --bg-color: #fafafaff;
+  --bg-color: #89ccbb;
+  --primary-color: #0c9;
+  --clickable-highlight-color: #00664e;
 }
 
 
@@ -49,24 +51,34 @@ body {
 
 
 h1 {
-  border: 1px solid var(--debug-color);
+  margin-top: 36px;
   text-align: center;
   font-size: 3em;
   column-span: all;
   margin-bottom: 36px;
+  opacity: 0.9;
 }
 
 
 #project-container {
-  border: 3px solid black;
+  border: 0px solid black;
   column-span: all;
-  padding: 18px;
+  padding: 2em;
+  background-color: white;
+  background-image: url('./images/paper.png');
+  background-blend-mode: luminosity;
+  background-size: 33%;
+  box-shadow: 1px 1px 16px #000a;
+  margin-bottom: 72px;
+}
+
+#project-container * {
+  opacity: 0.9;
 }
 
 
 .clickable {
-  background-color: var(--bg-color);
-  outline: 1px solid var(--debug-color);
+  background-color: unset;
   border: none;
   cursor: pointer;
   text-transform: uppercase;
@@ -76,13 +88,26 @@ h1 {
 
 
 .clickable:hover {
-  background-color: #efefef;
+  color: var(--clickable-highlight-color);
+}
+
+
+.textfield {
+  padding: 8px 16px;
+  border: none;
+  background-color: unset;
+  outline: 1px dashed black;
+}
+
+.textfield:focus {
+  outline: 1px dashed black;
 }
 
 
 .project-title {
   font-size: 36px;
   font-family: Georgia, 'Times New Roman', Times, serif;
+  text-transform: unset;
 }
 
 .project {
@@ -94,7 +119,7 @@ h1 {
   display: block;
   text-align: start;
   font-family: 'Courier New', Courier, monospace;
-  text-transform: initial;
+  text-transform: unset;
 }
 
 .task-group {
@@ -114,7 +139,7 @@ h1 {
 
 .task-title {
   font-family: 'Courier New', Courier, monospace;
-  text-transform: initial;
+  text-transform: unset;
 }
 
 
@@ -161,4 +186,12 @@ h1 {
   min-width: 100%;
   display: flex;
   justify-content: flex-end;
+}
+
+
+.paper-texture {
+  background-color: red;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
