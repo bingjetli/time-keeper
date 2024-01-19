@@ -324,6 +324,7 @@ const ProjectComponent = project_key => {
 
 
 window.onload = _ => {
+
   //First, get a pointer to the project container.
   project_container = document.getElementById('project-container');
   if (project_container !== null) {
@@ -352,6 +353,14 @@ window.onload = _ => {
     project_container.append(new_project_button);
 
 
+    //After drawing the existing projects, draw the `new_project` button.
+    const export_button = document.createElement('button');
+    export_button.innerText = 'export to excel';
+    export_button.classList.add('clickable');
+    export_button.onclick = _ => exportToExcel(project_list);
+    project_container.append(export_button);
+
+
     //Start the global update timer.
     setInterval(_ => {
       if (timer_list.length > 0) {
@@ -375,6 +384,145 @@ window.onload = _ => {
     }, 1000);
   }
 };
+
+
+
+
+function exportToExcel(project_list) {
+
+
+  if (project_list.length < 1) alert('There is nothing to export!');
+  else {
+
+    //Create the excel file.
+    const excel_file = XLSX.utils.book_new();
+
+
+    project_list.forEach(project_key => {
+
+      //Create a new worksheet for each project.
+      const worksheet_data = [];
+
+
+      /** WORKSHEET SCHEMA
+       * 
+       * [
+       *  [project_title],
+       *  ['generated-using...'],
+       *  ,
+       *  [task-group-date, task-group-title,           , total_duration],
+       *  [task_date      ,                 , task_title, task_duration],
+       *  ,
+       *  [task_date      , task_title      ,           , task_duration],
+       *  ...
+       * ]
+       * 
+       */
+
+
+      const project_data_string = localStorage.getItem(project_key);
+      if (project_data_string !== null) {
+
+        const project_data = JSON.parse(project_data_string);
+
+        worksheet_data.push(
+          [project_data.name],
+          ['Generated using Time Keeper @ ' + window.location],
+          undefined
+        );
+
+
+        worksheet_data.push(['Date', 'Duration', 'Description'], undefined);
+        project_data.data.forEach(key => {
+
+          if (key.startsWith('task-group-')) {
+
+            const data_array = [];
+
+            const timestamp = key.split('-')[2];
+            const task_group_data_string = localStorage.getItem(key);
+
+
+            if (task_group_data_string !== null) {
+
+              const task_group_data = JSON.parse(task_group_data_string);
+
+
+              let duration_total = 0;
+              //Now try to fetch the task group data.
+              task_group_data.tasks.forEach(task_key => {
+
+                const timestamp = task_key.split('-')[1];
+                const task_data_string = localStorage.getItem(task_key);
+
+
+                if (task_data_string !== null) {
+
+                  const task_data = JSON.parse(task_data_string);
+                  if (task_data !== null) {
+
+                    duration_total += task_data.duration;
+
+
+                    data_array.push([
+                      new Date(Number(timestamp)),
+                      formatDuration(task_data.duration),
+                      '    ' + task_data.name
+                    ]);
+                  }
+                }
+              });
+
+
+              //Now add the task group entry back to the beginning of 
+              //the data array. And concatenate the data array to the
+              //worksheet_data array.
+              data_array.unshift([
+                new Date(Number(timestamp)),
+                formatDuration(duration_total),
+                task_group_data.name
+              ]);
+
+              worksheet_data.push(...data_array);
+            }
+            //---
+          }
+          else if (key.startsWith('task-')) {
+            const timestamp = key.split('-')[1];
+            const date = new Date(Number(timestamp));
+            const task_data_string = localStorage.getItem(key);
+            if (task_data_string !== null) {
+              const task_data = JSON.parse(task_data_string);
+              if (task_data !== null) {
+                worksheet_data.push([
+                  date,
+                  formatDuration(task_data.duration),
+                  task_data.name
+                ]);
+              }
+            }
+          }
+
+
+          //Add an empty space in the worksheet after each project task/task group.
+          worksheet_data.push(undefined);
+        });
+
+
+        const project_sheet = XLSX.utils.aoa_to_sheet(worksheet_data);
+        XLSX.utils.book_append_sheet(excel_file, project_sheet, project_data.name);
+
+      }
+
+    });
+
+
+    //Export the excel file.
+    XLSX.writeFile(excel_file, 'timesheet.xlsx', { compression: false });
+  }
+}
+
+
 
 
 function createNewProject({
@@ -407,6 +555,8 @@ function createNewProject({
 }
 
 
+
+
 function createNewTask({
   parentContainer,
   newTaskButton
@@ -422,6 +572,7 @@ function createNewTask({
   }
   else newTaskButton.replaceWith(new_task);
 }
+
 
 
 
@@ -458,6 +609,8 @@ function createNewTaskGroup({
     }),
   );
 }
+
+
 
 
 function saveTask({
@@ -549,6 +702,8 @@ function saveTask({
 }
 
 
+
+
 function renameTitle({
   triggerButton,
   key,
@@ -615,4 +770,24 @@ function toTimeString(unix_timestamp) {
 
 
   return `${hours.toString().padStart(2, '0')} : ${(minutes % 60).toString().padStart(2, '0')} : ${(seconds % 60).toString().padStart(2, '0')}`;
+}
+
+
+
+function formatDuration(duration_ms) {
+  if (duration_ms < 1000) {
+    return duration_ms + ' ms';
+  }
+  else if (duration_ms < (60 * 1000)) {
+    return Math.round(duration_ms / 1000) + ' s';
+  }
+  else if (duration_ms < (60 * 60 * 1000)) {
+    return Math.round(duration_ms / (60 * 1000)) + ' m';
+  }
+  else if (duration_ms < (24 * 60 * 60 * 1000)) {
+    return Math.round(duration_ms / (60 * 60 * 1000)) + ' h';
+  }
+  else {
+    return Math.round(duration_ms / (24 * 60 * 60 * 1000)) + ' d';
+  }
 }
