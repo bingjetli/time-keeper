@@ -51,7 +51,11 @@ const TaskComponent = (
   let stored_task = null;
   if (task_key !== null) {
     const value_string = localStorage.getItem(task_key);
-    if (value_string === null) alert('Bug detected, failed to load ' + task_key + ' from the local storage.');
+    if (value_string === null) alert(
+      'Bug detected, failed to load ' + 
+      task_key + 
+      ' from the local storage.'
+    );
     else {
       stored_task = JSON.parse(value_string);
     }
@@ -98,7 +102,10 @@ const TaskComponent = (
     //Saving a task will stop the timer and show the `new task` button
     //again.
     if (project_container === null || new_task_button === null) {
-      alert('bug detected, trying to create a new task component but the parameters `project_container` or `new_task_button` are null.');
+      alert(
+        'bug detected, trying to create a new task component but the ' +
+        'parameters `project_container` or `new_task_button` are null.'
+      );
     }
     const save_task_button = document.createElement('button');
     save_task_button.id = 'task-' + task_id + '-save-button';
@@ -138,7 +145,11 @@ const TaskGroupComponent = task_group_key => {
   let stored_task_group = null;
   if (task_group_key !== null) {
     const value_string = localStorage.getItem(task_group_key);
-    if (value_string === null) alert('bug detected, failed to load ' + task_group_key + ' from the localstorage.');
+    if (value_string === null) alert(
+      'bug detected, failed to load ' + 
+      task_group_key + 
+      ' from the localstorage.'
+    );
     else {
       stored_task_group = JSON.parse(value_string);
     }
@@ -220,7 +231,11 @@ const ProjectComponent = project_key => {
       //we convert it to JSON and save it into `stored_project`;
       stored_project = JSON.parse(value_string);
     }
-    else alert('Bug detected, tried to load "' + project_key + '" but it doesn\'t exist in the localstorage.');
+    else alert(
+      'Bug detected, tried to load "' + 
+      project_key + 
+      '" but it doesn\'t exist in the localstorage.'
+    );
   }
 
 
@@ -256,7 +271,9 @@ const ProjectComponent = project_key => {
         );
       });
     }
-    else alert('Bug detected, the project loaded from localstorage might be corrupted.');
+    else alert(
+      'Bug detected, the project loaded from localstorage might be corrupted.'
+    );
   }
 
 
@@ -372,7 +389,9 @@ window.onload = _ => {
         timer_list.forEach(timer => {
 
           if (timer.isRemovedOnTick === false) {
-            timer.element.innerText = toTimeString(current_timestamp - timer.startTime);
+            timer.element.innerText = toTimeString(
+              current_timestamp - timer.startTime
+            );
             active_timers.push(timer);
           }
 
@@ -504,13 +523,18 @@ function exportToExcel(project_list) {
           }
 
 
-          //Add an empty space in the worksheet after each project task/task group.
+          //Add an empty space in the worksheet after 
+          //each project task/task group.
           worksheet_data.push(undefined);
         });
 
 
         const project_sheet = XLSX.utils.aoa_to_sheet(worksheet_data);
-        XLSX.utils.book_append_sheet(excel_file, project_sheet, project_data.name);
+        XLSX.utils.book_append_sheet(
+          excel_file, 
+          project_sheet, 
+          project_data.name
+        );
 
       }
 
@@ -565,7 +589,9 @@ function createNewTask({
   const new_task = TaskComponent(null, parentContainer, newTaskButton);
   if (
     newTaskButton.parentNode !== null &&
-    newTaskButton.parentNode.classList.contains('new-buttons-container') === true
+    newTaskButton.parentNode.classList.contains(
+      'new-buttons-container'
+      ) === true
   ) {
     newTaskButton.parentNode.replaceWith(new_task);
     new_task.after(DividerComponent());
@@ -589,7 +615,10 @@ function createNewTaskGroup({
 
   //Update the project data field in the local storage.
   const value_string = localStorage.getItem(projectKey);
-  if (value_string === null) alert('bug detected, trying to create a task group for a project that does\'t exist in the local storage.');
+  if (value_string === null) alert(
+    'bug detected, trying to create a task group for a project that ' +
+    'does\'t exist in the local storage.'
+  );
   else {
 
     const stored_project = JSON.parse(value_string);
@@ -632,7 +661,9 @@ function saveTask({
   //Add the new task button again after th
   if (
     newTaskButton.parentNode !== null &&
-    newTaskButton.parentNode.classList.contains('new-buttons-container') === true
+    newTaskButton.parentNode.classList.contains(
+      'new-buttons-container'
+      ) === true
   ) {
     parentContainer.append(newTaskButton.parentNode);
   }
@@ -653,7 +684,10 @@ function saveTask({
   if (parentContainer.id.startsWith('task-group-')) {
     const task_group_id = parentContainer.id.split('-')[3];
     let task_group = localStorage.getItem('task-group-' + task_group_id);
-    if (task_group === null) alert('bug detected, trying to update a task group that doesn\'t exist in the localstorage.');
+    if (task_group === null) alert(
+      'bug detected, trying to update a task group that ' +
+      'doesn\'t exist in the localstorage.'
+    );
     else {
 
       //Reassign the string received from `.getItem()` with the actual
@@ -677,7 +711,10 @@ function saveTask({
     //task group. `parentContainer` references a project.
     const project_id = parentContainer.id.split('-')[1];
     let project = localStorage.getItem('project-' + project_id);
-    if (project === null) alert('bug detected, trying to create a task for a project that doesn\'t exist in the localstorage.');
+    if (project === null) alert(
+      'bug detected, trying to create a task for a project ' +
+      'that doesn\'t exist in the localstorage.'
+    );
     else {
 
       //Parse the project into it's actual object.
@@ -717,7 +754,11 @@ function renameTitle({
 
     //Update the localstorage.
     let item = localStorage.getItem(key);
-    if (item === null) console.log('bug detected, trying to update ' + key + ' but it doesn\'t exist in the localstorage.');
+    if (item === null) console.log(
+      'bug detected, trying to update ' + 
+      key + 
+      ' but it doesn\'t exist in the localstorage.'
+    );
     else {
       item = JSON.parse(item);
 
@@ -741,9 +782,15 @@ function renameTitle({
 
   textfield.value = triggerButton.innerText;
   textfield.classList.add('textfield');
-  if (key.startsWith('project-') === true) textfield.classList.add('project-title');
-  if (key.startsWith('task-') === true) textfield.classList.add('task-title');
-  if (key.startsWith('task-group') === true) textfield.classList.add('task-group-title');
+  if (key.startsWith('project-') === true){
+    textfield.classList.add('project-title');
+  }
+  if (key.startsWith('task-') === true){
+    textfield.classList.add('task-title');
+  }
+  if (key.startsWith('task-group') === true){
+    textfield.classList.add('task-group-title');
+  }
   textfield.onkeyup = e => {
     if (e.key === 'Enter') saveTitle();
   };
@@ -769,7 +816,11 @@ function toTimeString(unix_timestamp) {
   const hours = minutes > 59 ? Math.trunc(minutes / 60) : 0;
 
 
-  return `${hours.toString().padStart(2, '0')} : ${(minutes % 60).toString().padStart(2, '0')} : ${(seconds % 60).toString().padStart(2, '0')}`;
+  return (
+    hours.toString().padStart(2, '0') + ':' +
+    (minutes % 60).toString().padStart(2, '0') + ':' +
+    (seconds % 60).toString().padStart(2, '0')
+  );
 }
 
 
